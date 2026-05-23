@@ -54,7 +54,7 @@ with Leaflet.js map. Backend: FastAPI. Deployed to Vercel + Render.
 - Print informative progress messages during ML training
 
 ## Project structure
-nps-crowd-forecast/
+```nps-crowd-forecast/
 ├── api/              (FastAPI backend)
 ├── data/             (raw and processed CSVs)
 ├── ml/               (training scripts)
@@ -62,6 +62,7 @@ nps-crowd-forecast/
 ├── render.yaml
 ├── vercel.json
 └── GEMINI.md
+```
 
 ## What to never do
 - Never put NPS_API_KEY in frontend code or commit .env files
