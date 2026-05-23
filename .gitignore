@@ -216,3 +216,29 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Environment secrets
+.env
+.env.local
+
+# Data (large files)
+data/raw/*.csv
+data/processed/*.csv
+
+# Model binary (regenerate from training)
+api/models/*.joblib
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Jupyter
+notebooks/.ipynb_checkpoints/
+*.ipynb_checkpoints
