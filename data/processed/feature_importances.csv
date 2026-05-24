@@ -1,0 +1,15 @@
+feature,importance
+is_summer,0.36070946
+month_cos,0.1899168
+is_holiday_month,0.118887775
+month,0.07234161
+month_sin,0.046107315
+region_southeast,0.041736472
+region_midwest,0.03873886
+region_northeast,0.03210692
+region_national_capital,0.025799166
+region_alaska,0.02512815
+region_pacific_west,0.024881942
+region_intermountain,0.023645494
+is_weekend,0.0
+region_other,0.0
