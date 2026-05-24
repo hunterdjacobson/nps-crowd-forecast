@@ -33,8 +33,10 @@ with Leaflet.js map. Backend: FastAPI. Deployed to Vercel + Render.
 ## ML model
 - Task: multi-class classification (4 crowd levels)
 - Labels: Low, Moderate, High, Very High (derived from monthly visitation quartiles)
-- Features: month, day_of_week, is_weekend, is_holiday, park_size_acres,
-  park_region, avg_temp_f, precipitation_in, days_since_park_opened
+- Features: month, month_sin, month_cos, is_summer, is_holiday_month, is_weekend,
+  region (normalized full text: southeast, northeast, midwest, alaska, 
+  pacific_west, intermountain, national_capital, other)
+- One-hot encode: region only (not park_code — too many unique values)
 - Model: XGBoost XGBClassifier
 - Serialized to: api/models/crowd_model.joblib
 
