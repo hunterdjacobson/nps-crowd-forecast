@@ -1,0 +1,26 @@
+@import "tailwindcss";
+@import 'leaflet/dist/leaflet.css';
+
+body {
+  color: #111827;
+  background-color: #f9fafb;
+}
+
+@layer components {
+  .crowd-low {
+    @apply bg-green-100 text-green-800;
+  }
+  .crowd-moderate {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+  .crowd-high {
+    @apply bg-orange-100 text-orange-800;
+  }
+  .crowd-very-high {
+    @apply bg-red-100 text-red-800;
+  }
+
+  .map-container {
+    @apply h-[500px] w-full;
+  }
+}
