@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Shared httpx.AsyncClient
-client = httpx.AsyncClient(timeout=10.0)
+client = httpx.AsyncClient(timeout=10.0, follow_redirects=True)
 
 async def close_client() -> None:
     """Closes the shared httpx client."""

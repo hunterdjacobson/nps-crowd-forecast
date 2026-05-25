@@ -47,6 +47,7 @@ async def predict_crowd(
         }
 
     try:
+        park_code = park_code.lower().strip()
         # 1. Validation: Check if park exists in thresholds
         if park_code not in thresholds_df['park_code'].values:
             logger.warning(f"Park code {park_code} not found in thresholds.")

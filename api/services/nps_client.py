@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 # Shared httpx.AsyncClient with timeout
 client = httpx.AsyncClient(timeout=10.0)
 
-async def close_client() -> None:
+async def close() -> None:
     """Closes the shared httpx client."""
     await client.aclose()
     logger.info("NPS API client closed.")
