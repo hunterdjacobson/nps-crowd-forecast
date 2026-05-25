@@ -54,6 +54,9 @@ async def predict_crowd(
             return {
                 "crowd_label": "Unknown",
                 "confidence": 0.0,
+                "probabilities": {
+                    "Low": 0.0, "Moderate": 0.0, "High": 0.0, "Very High": 0.0
+                },
                 "park_code": park_code
             }
 

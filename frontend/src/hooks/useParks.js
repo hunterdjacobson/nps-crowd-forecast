@@ -21,6 +21,11 @@ export function useParks() {
   const handleSearch = useCallback(async (query) => {
     setIsLoading(true);
     setError(null);
+    // Reset current selection when performing a new search
+    setSelectedPark(null);
+    setParkDetails(null);
+    setForecast(null);
+    
     try {
       const results = await searchParks(query);
       setParks(results);

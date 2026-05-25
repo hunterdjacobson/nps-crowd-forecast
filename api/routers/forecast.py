@@ -1,3 +1,4 @@
+import logging
 import re
 from datetime import date
 from fastapi import APIRouter, HTTPException
@@ -5,6 +6,7 @@ from typing import Dict, Any
 from api.services import nps_client, noaa_client, ml_service
 
 router = APIRouter(prefix="/forecast", tags=["Forecast"])
+logger = logging.getLogger(__name__)
 
 def parse_lat_long(lat_long_str: str) -> tuple[float, float]:
     """
@@ -48,10 +50,42 @@ async def get_crowd_forecast(park_code: str) -> Dict[str, Any]:
     day_of_week = today.weekday()
 
     # 5. Determine Region
-    # LIMITATION: Mapping NPS park addresses to ML regions is complex.
-    # Using 'intermountain' as a broad fallback for this prototype.
-    # In a production app, we would use a lookup table for all 400+ park codes.
-    region = "intermountain"
+    raw_region = park.get("region", "").lower().strip()
+    state_code = park.get("addresses", [{}])[0].get("stateCode", "").upper().strip()
+    
+    # Map NPS region names/codes to normalized model values
+    REGION_MAP = {
+        "southeast": "southeast", "ser": "southeast",
+        "northeast": "northeast", "ner": "northeast",
+        "midwest": "midwest", "mwr": "midwest",
+        "alaska": "alaska", "akr": "alaska",
+        "pacific west": "pacific_west", "pacific_west": "pacific_west", "pwr": "pacific_west",
+        "intermountain": "intermountain", "imr": "intermountain",
+        "national capital": "national_capital", "national_capital": "national_capital", "ncr": "national_capital",
+    }
+
+    STATE_TO_REGION = {
+        "AL": "southeast", "AR": "southeast", "FL": "southeast", "GA": "southeast", 
+        "KY": "southeast", "LA": "southeast", "MS": "southeast", "NC": "southeast", 
+        "SC": "southeast", "TN": "southeast", "VA": "southeast", "VI": "southeast", "PR": "southeast",
+        "CT": "northeast", "DE": "northeast", "MA": "northeast", "MD": "northeast", 
+        "ME": "northeast", "NH": "northeast", "NJ": "northeast", "NY": "northeast", 
+        "PA": "northeast", "RI": "northeast", "VT": "northeast", "WV": "northeast",
+        "IA": "midwest", "IL": "midwest", "IN": "midwest", "KS": "midwest", 
+        "MI": "midwest", "MN": "midwest", "MO": "midwest", "NE": "midwest", 
+        "ND": "midwest", "OH": "midwest", "SD": "midwest", "WI": "midwest",
+        "AK": "alaska",
+        "CA": "pacific_west", "HI": "pacific_west", "ID": "pacific_west", 
+        "NV": "pacific_west", "OR": "pacific_west", "WA": "pacific_west", 
+        "GU": "pacific_west", "AS": "pacific_west", "MP": "pacific_west",
+        "AZ": "intermountain", "CO": "intermountain", "MT": "intermountain", 
+        "NM": "intermountain", "OK": "intermountain", "TX": "intermountain", 
+        "UT": "intermountain", "WY": "intermountain",
+        "DC": "national_capital"
+    }
+
+    region = REGION_MAP.get(raw_region, STATE_TO_REGION.get(state_code, "other"))
+    logger.info(f"Park {park_code} (State: {state_code}, NPS Region: {raw_region}) mapped to model region: {region}")
 
     # 6. Predict crowd level using ML model
     # Use weather temperature if available, else fallback to 65F

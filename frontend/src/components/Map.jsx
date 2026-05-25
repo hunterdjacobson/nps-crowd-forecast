@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 
@@ -15,20 +15,25 @@ L.Icon.Default.mergeOptions({
 });
 
 /**
- * Helper component to handle map flying/recentering.
+ * Controller component to handle map interactions (flyTo and view resetting).
  */
-const RecenterMap = ({ center, zoom }) => {
+function MapController({ selectedPark, parks }) {
   const map = useMap();
+
   useEffect(() => {
-    // Check for valid center and non-zero latitude
-    if (center && center[0] !== 0) {
-      map.flyTo(center, zoom, {
-        duration: 1.5
-      });
+    if (selectedPark && selectedPark.lat && selectedPark.lat !== 0) {
+      map.flyTo([selectedPark.lat, selectedPark.lon], 9);
     }
-  }, [center, zoom, map]);
+  }, [selectedPark, map]);
+
+  useEffect(() => {
+    if (!selectedPark) {
+      map.setView([39.5, -98.35], 4);
+    }
+  }, [parks, selectedPark, map]);
+
   return null;
-};
+}
 
 /**
  * Map component for displaying park markers and handling selection.
@@ -39,18 +44,6 @@ const RecenterMap = ({ center, zoom }) => {
  * @param {Function} props.onParkSelect - Callback for park selection.
  */
 const Map = ({ parks = [], selectedPark, onParkSelect }) => {
-  const mapRef = useRef(null);
-  
-  // Default center of USA
-  const defaultCenter = [39.5, -98.35];
-  const defaultZoom = 4;
-
-  useEffect(() => {
-    if (parks.length > 0 && !selectedPark && mapRef.current) {
-      mapRef.current.setView(defaultCenter, defaultZoom);
-    }
-  }, [parks, selectedPark]);
-
   // Filter out parks with invalid coordinates
   const validParks = parks.filter(p => 
     p.lat !== undefined && p.lon !== undefined && 
@@ -61,18 +54,17 @@ const Map = ({ parks = [], selectedPark, onParkSelect }) => {
   return (
     <div className="map-container rounded-xl shadow-inner border-2 border-gray-100 overflow-hidden">
       <MapContainer 
-        center={defaultCenter} 
-        zoom={defaultZoom} 
+        center={[39.5, -98.35]} 
+        zoom={4} 
         scrollWheelZoom={true}
         className="h-full w-full"
-        ref={mapRef}
       >
+        <MapController selectedPark={selectedPark} parks={parks} />
+        
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
-        <RecenterMap center={selectedPark && selectedPark.lat !== 0 ? [selectedPark.lat, selectedPark.lon] : null} zoom={9} />
 
         {validParks.map((park) => (
           <Marker 

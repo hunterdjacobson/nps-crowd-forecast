@@ -106,20 +106,26 @@ const ForecastWidget = ({ forecast, isLoading, error }) => {
 
         {/* Probability Bars */}
         <div className="space-y-3">
-          {Object.entries(crowd_forecast.probabilities).map(([label, prob]) => (
-            <div key={label} className="space-y-1">
-              <div className="flex justify-between text-[10px] font-black uppercase text-gray-900 px-1">
-                <span>{label}</span>
-                <span>{(prob * 100).toFixed(0)}%</span>
+          {crowd_forecast.probabilities ? (
+            Object.entries(crowd_forecast.probabilities).map(([label, prob]) => (
+              <div key={label} className="space-y-1">
+                <div className="flex justify-between text-[10px] font-black uppercase text-gray-900 px-1">
+                  <span>{label}</span>
+                  <span>{(prob * 100).toFixed(0)}%</span>
+                </div>
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full rounded-full transition-all duration-500 ${probClasses[label] || 'bg-gray-400'}`}
+                    style={{ width: `${prob * 100}%` }}
+                  ></div>
+                </div>
               </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div 
-                  className={`h-full rounded-full transition-all duration-500 ${probClasses[label] || 'bg-gray-400'}`}
-                  style={{ width: `${prob * 100}%` }}
-                ></div>
-              </div>
+            ))
+          ) : (
+            <div className="text-center py-4 text-xs text-gray-500 italic">
+              Detailed probability data unavailable
             </div>
-          ))}
+          )}
         </div>
 
         <div className="pt-4 text-center border-t border-gray-50">
