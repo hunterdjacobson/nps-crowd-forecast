@@ -12,6 +12,7 @@ function App() {
     parkDetails,
     forecast,
     isLoading,
+    isWakingUp,
     error,
     handleSearch,
     handleParkSelect
@@ -24,7 +25,7 @@ function App() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-black tracking-tight flex items-center gap-2 text-white">
-              <span role="img" aria-label="tent">🏕️</span> NPS Crowd Forecast
+              <span role="img" aria-label="tent"></span> NPS Crowd Forecast
             </h1>
             <p className="text-green-100 font-medium text-sm">
               Live conditions & crowd predictions for US National Parks
@@ -33,6 +34,17 @@ function App() {
           <SearchBar onSearch={handleSearch} isLoading={isLoading} />
         </div>
       </header>
+
+      {/* Cold Start / Waking Up Banner */}
+      {isWakingUp && !error && (
+        <div className="bg-sky-blue text-white p-4 text-center text-sm font-medium animate-pulse">
+          <div className="max-w-2xl mx-auto">
+            <span role="img" aria-label="cloud" className="mr-2">☁️</span>
+            Waking up the cloud server... This can take up to 60 seconds on the free tier 
+            as the machine learning model loads into memory. Thank you for your patience.
+          </div>
+        </div>
+      )}
 
       {/* Global Error Banner */}
       {error && (
@@ -51,6 +63,15 @@ function App() {
               <div className="bg-white p-8 rounded-xl border-2 border-dashed border-gray-200 text-center text-gray-800">
                 <p className="text-lg font-medium">Search for a park to begin</p>
                 <p className="text-sm mt-1 italic">Try "Yosemite", "Zion", or "Yellowstone"</p>
+              </div>
+            )}
+
+            {/* Loading state for ParkCard */}
+            {isLoading && !parkDetails && (
+              <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 animate-pulse space-y-4">
+                <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-24 bg-gray-200 rounded w-full"></div>
               </div>
             )}
 
@@ -78,7 +99,7 @@ function App() {
                 <ForecastWidget 
                   forecast={forecast} 
                   isLoading={isLoading} 
-                  error={null} // Sub-component error handled globally or locally if needed
+                  error={null}
                 />
               </div>
             </div>
