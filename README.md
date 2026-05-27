@@ -113,7 +113,7 @@ npm run dev
 
 - **Cold Starts:** Since the API is hosted on Render's free tier, the first request after inactivity may take 30-50 seconds to spin up.
 - **Region Inference:** The model generalizes parks into 8 broad regions. Local micro-climates or hyper-local events might not be fully captured.
-- **Same-Region Prediction:** Parks within the same region with similar temporal features (e.g., two parks in the Southeast in July) may receive similar baseline crowd scores before weather adjustment.
+- **Same-Region Prediction:** Parks within the same region with similar temporal features (e.g., two parks in the Southeast in July) may receive similar baseline crowd scores before weather adjustment. This makes it hard to distinguish between a small park and a large park in the same region.
 
 ---
 
